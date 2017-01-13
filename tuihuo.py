@@ -9,14 +9,6 @@ import six
 from pymongo import MongoClient
 # 3rd party
 import numpy as np
-import scipy.cluster.hierarchy as sch
-import scipy.cluster.vq as scv
-import scipy.sparse as sp
-import sklearn.cluster as skc
-from sklearn.grid_search import ParameterGrid
-from sklearn import datasets
-from sklearn.cross_validation import train_test_split
-from sklearn import svm, datasets
 from sklearn.metrics import classification_report
 # local
 import metrics, utils
