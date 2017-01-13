@@ -15,12 +15,13 @@ import scipy.sparse as sp
 import sklearn.cluster as skc
 from sklearn.grid_search import ParameterGrid
 from sklearn import datasets
-# local
-import metrics, utils
-from relable import voting,relabel_cluster
 from sklearn.cross_validation import train_test_split
 from sklearn import svm, datasets
 from sklearn.metrics import classification_report
+# local
+import metrics, utils
+from relable import voting,relabel_cluster
+from co_association import co_association
 from simulated_annealing.optimize import SimulatedAnneal
 
 from config import (MONGODB_HOST,
@@ -35,7 +36,8 @@ conn = MongoClient(host=MONGODB_HOST, port=MONGODB_PORT)
 mongodb = conn[MONGODB_DB]
 collection = mongodb[MONGOD_COLLECTION]
 
-def ForVoting():
+def pre_data():
+    #for relabel & voting 
     clusters = []
     for K in range(KN):
         data = collection.find({'KN':K})[0]
@@ -44,34 +46,37 @@ def ForVoting():
             for point in data['cluster_'+str(i+1)]:
                 temp[int(point)-1] = i+1
         clusters.append(temp)
-    relabeled_clusters = relabel_cluster(clusters)
-    voting(relabeled_clusters)
+    relabeled_clusters = relabel_cluster(clusters) #对齐标签
+    voting(relabeled_clusters)                     #投票
+    """insert voting data table
+    """
+    # count super_pointers
+    count = 0
+    relabel_dict = {}
+    for li in relabeled_clusters:
+        for point in range(1,POINTS+1):
+            if relabel_dict.has_key(li[point-1]):
+                relabel_dict[li[point-1]].append(point)
+            else:
+                relabel_dict[li[point-1]] = [point]
+    for i in range(1,CLUSTERING+1):
+        co_ = Counter(relabel_dict[i])
+        sup = []
+        for k,v in co_.items():
+            if v == KN:
+                sup.append(k)
+        count += len(sup)
+    """insert super_points data table
+    """
 
-
+def initTemp():
+    
 if __name__=="__main__":
-    create_coassoc()
-    create_supers()
-    ForVoting()
-    iris = datasets.load_iris()
-    X = iris.data
-    y = iris.target
-    # Split the data into test and train sets                         
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
-    # This is the hyperparameter space we'll be searching over
-    svc_params = {'C':np.logspace(-8, 10, 19, base=2),
-                  'fit_intercept':[True, False]
-                 }
-    # Using a linear SVM classifier             
-    clf = svm.LinearSVC()
-    # Initialize Simulated Annealing and fit
-    sa = SimulatedAnneal(clf, svc_params, T=10.0, T_min=0.001, alpha=0.75,
-                         verbose=True, max_iter=0.25, n_trans=5, max_runtime=300,
-                         cv=3, scoring='f1_macro', refit=True)
-    sa.fit(X_train, y_train)
-    # Print the best score and the best params
-    print(sa.best_score_, sa.best_params_)
-    # Use the best estimator to predict classes
-    optimized_clf = sa.best_estimator_
-    y_test_pred = optimized_clf.predict(X_test)
+    pre_data()
+    # Initialize Simulated Annealing 
+    # InitT = 0.46 # 初始温度
+    sa = SimulatedAnneal(T=initTemp(), max_iter=10, alpha=0.75,cf=0.8)
+    label = []      # 真实标签
+    predict_result = sa.fix() # 预测标签
     # Print a report of precision, recall, f1_score
-    print(classification_report(y_test, y_test_pred))
+    print(classification_report(label, predict_result))
