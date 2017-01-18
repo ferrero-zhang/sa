@@ -3,7 +3,8 @@
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 MONGODB_DB = 'Ifeng'
-MONGODB_COLLECTION = 'mnist_kmeans'
+MONGODB_COLLECTION = 'letter_kmeans'
+MONGODB_POINT = 'letter_voting_super'
 KN = 50 #基础聚类个数
-CLUSTERING = 10  #标签数
-POINTS = 70000   #数据个数
+CLUSTERING = 26  #标签数
+POINTS = 20000   #数据个数
