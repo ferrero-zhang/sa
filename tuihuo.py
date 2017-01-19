@@ -145,8 +145,18 @@ if __name__=="__main__":
     InitT = initNa(CKN) # 初始温度
     # print(InitT)
     sa = SimulatedAnneal(T=InitT, max_iter=10, alpha=0.9,cf=0.8)
+    '''获取超点集合
+    '''
+    SUPER = []
+    for sid in range(1,2589):
+        spointers = collection_point.find({'S_id':sid})
+        s_pointers = []
+        for li in spointers:
+            pointer = li['data_id']
+            s_pointers.append(pointer)
+        SUPER.append(s_pointers)
     startTime = time.time()
-    predict_result = sa.fit() # 组合聚类生产最后标签
+    predict_result = sa.fit(SUPER) # 组合聚类生产最后标签
     endTime = time.time()
     cal = endTime - startTime
     print("cal time is :",cal)

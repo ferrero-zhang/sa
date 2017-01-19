@@ -48,7 +48,7 @@ class SimulatedAnneal(object):
         self.__cf = cf
         self.__T_min = T_min
 
-    def fit(self):
+    def fit(self,SUPER):
         # Set up  the initial params
         T = self.__T
         alpha = self.__alpha
@@ -59,16 +59,6 @@ class SimulatedAnneal(object):
         accept_prob = lambda old, new, T: np.exp((new-old)/T)
         total_iter = 1
         print("test...................")
-        '''获取超点集合
-        '''
-        SUPER = []
-        for sid in range(1,2589):
-            spointers = collection_point.find({'S_id':sid})
-            s_pointers = []
-            for li in spointers:
-                pointer = li['data_id']
-                s_pointers.append(pointer)
-            SUPER.append(s_pointers)
         '''引入投票结果
         '''
         VOTE = sqlContext.read.json("D:/github/sa/vote_super.json")
@@ -78,15 +68,15 @@ class SimulatedAnneal(object):
         NADATA = sqlContext.read.json("D:/github/sa/na.json")
         NADATA = NADATA.toPandas()
         old_score = T*10
-        # while T > T_min and total_iter < max_iter :
+        while T > T_min and total_iter < max_iter :
             
-            # for li in SUPER:
-                # voteNum = random.randint(0,len(li)-1)
-                # origin_vote = VOTE.ix[[voteNum-1],['origin_vote']]
-                # new_vote = VOTE.ix[[voteNum-1],['origin_vote']]
-                # if new_vote != origin_vote:
-                    # '''计算 HB,r......
-                    # '''
+            for li in SUPER:
+                voteNum = li[random.randint(1,len(li))-1]
+                origin_vote = VOTE.ix[[voteNum-1],['origin_vote']].values.tolist()[0][0]
+                new_vote = VOTE.ix[[voteNum-1],['vote']].values.tolist()[0][0]
+                if new_vote != origin_vote:
+                    '''计算 HB,r......
+                    '''
                     # for i in range(1,CLUSTERING+1):
                         # NADATA.ix[[],[str(new_vote)+str(i)]] += 1
                         # NADATAix[[],[str(origin_vote)+str(i)]] -= 1
@@ -94,31 +84,34 @@ class SimulatedAnneal(object):
                     # for i in range(1,CLUSTERING+1):
                         # for j in range(1,CLUSTERING+1):
                             # na += NADATA.ix[[],[str(i)+str(j)]]*(NADATAix[[],[str(i)+str(j)]]-1)/2
-                # nb_new = NADATA['ha'] - NADATA['na']
-                # nc_new = NADATA['ha'] - NADATA['na']
-                # nd_new = POINTS* POINTS-1)/2 - na - nb_new -nc_new
-                # NADATA['r'] = 2*(na+nd_new)/(POINTS*(POINTS-1)/2)
-                # new_score = NADATA.ix[[],['r']].sum()/KN  
-                # old_score = old_score
+                    # nb_new = NADATA['ha'] - NADATA['na']
+                    # nc_new = NADATA['ha'] - NADATA['na']
+                    # nd_new = POINTS* POINTS-1)/2 - na - nb_new -nc_new
+                    # NADATA['r'] = 2*(na+nd_new)/(POINTS*(POINTS-1)/2)
+                    # new_score = NADATA.ix[[],['r']].sum()/KN  
+                    # old_score = old_score
                 
-                # if new_score - old_score >0:
-                    # a = 1
-                # else:
-                    # a = accept_prob(old_score, new_score, T)
-                # if a > cf:
-                    # old_score = new_score
-                    # '''update data 
-                    # '''
-                    # for point in li:
-                        # VOTE.ix[[point-1],['origin_vote']] = new_vote
-                # else:
-                    # for point in li:
-                        # VOTE.ix[[point-1],['origin_vote']] = origin_vote
-                # T *= alpha
-                # total_iter += 1
-        return VOTE['vote'].values
+                    # if new_score - old_score >0:
+                        # a = 1
+                    # else:
+                        # a = accept_prob(old_score, new_score, T)
+                    # if a > cf:
+                        # old_score = new_score
+                        # '''update data 
+                        # '''
+                        # for point in li:
+                           # VOTE.ix[[point-1],['origin_vote']] = new_vote
+                    # else:
+                        # for point in li:
+                            # VOTE.ix[[point-1],['origin_vote']] = origin_vote
+                    for point in li:
+                        VOTE.ix[[point-1],['origin_vote']] = new_vote
+                    
+            T *= alpha
+            total_iter += 1
+        return VOTE['origin_vote'].values
         # print(VOTE['origin_vote'].values)
         
-# if __name__=="__main__":
-    # sa = SimulatedAnneal(T=0.0995, max_iter=10, alpha=0.9,cf=0.8)
-    # sa.fit()
+if __name__=="__main__":
+    sa = SimulatedAnneal(T=0.0995, max_iter=10, alpha=0.9,cf=0.8)
+    sa.fit()
