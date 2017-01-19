@@ -47,7 +47,7 @@ collection_na = mongodb[MONGODB_NA]
 points =[i for i in range(1,POINTS+1)]
 def pre_data():
     #for relabel & voting 
-    f = open('vote_super.json','w')
+    f = open('D:/github/sa/vote_super.json','w')
     result = []
     clusters = []
     origin_vote = {}
@@ -110,9 +110,10 @@ def cal_kmenas4HA():
         collection.update({'KN':i},li)
 
 def initNa(CKN):
-    f = open('na.json','w')
+    f = open('D:/github/sa/na.json','w')
     base = collection.find({'KN':CKN})[0]
     tempR = 0
+    ha = base['ha']
     for i in range(1,KN+1):
         na = 0
         tempNa = {}
@@ -123,26 +124,28 @@ def initNa(CKN):
                 tempNa[str(cli)+str(clj)] = pn
                 na += pn*(pn-1)/2
         tempNa['na'] = na
-        ha = base['ha']
+
         hb = li['ha']
         nb = ha - na
         nc = hb - na
         nd = POINTS * (POINTS-1)/2 - na - nb - nc
         r = 2*float(na + nd)/(POINTS*(POINTS-1))
         tempNa['r'] = r
+        tempNa['hb'] = hb
         # collection_na.insert(tempNa)
         tempR += r
+        # print(tempNa['hb'])
         f.write(json.dumps(tempNa))
         f.write('\n')   
     f.close()
-    return 0.1*tempR/KN
+    return 0.1*tempR/KN,ha
                 
         
 if __name__=="__main__":
     # pre_data()
     CKN = random.randint(1,KN)
     # Initialize Simulated Annealing 
-    InitT = initNa(CKN) # 初始温度
+    InitT,ha = initNa(CKN) # 初始温度
     # print(InitT)
     sa = SimulatedAnneal(T=InitT, max_iter=10, alpha=0.9,cf=0.8)
     '''获取超点集合
@@ -156,7 +159,7 @@ if __name__=="__main__":
             s_pointers.append(pointer)
         SUPER.append(s_pointers)
     startTime = time.time()
-    predict_result = sa.fit(SUPER) # 组合聚类生产最后标签
+    predict_result = sa.fit(SUPER,ha) # 组合聚类生产最后标签
     endTime = time.time()
     cal = endTime - startTime
     print("cal time is :",cal)
