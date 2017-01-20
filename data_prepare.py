@@ -15,10 +15,6 @@ import metrics, utils
 from relable import voting,relabel_cluster
 from co_association import co_association
 from simulated_annealing.optimize import SimulatedAnneal
-from pyspark import HiveContext
-from pyspark import SQLContext
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType
-from pyspark import *
 import pandas as pd
 from pandas import Series,DataFrame
 import random 
@@ -29,7 +25,7 @@ from multiprocessing import Process
 import logging
 from multiprocessing import Pool
 from json2csv import MainJson2Csv
-# SparkSession.builder.config(conf=SparkConf())
+
 from config import (MONGODB_HOST,
                     MONGODB_PORT,
                     MONGODB_DB,
@@ -45,14 +41,11 @@ mongodb = conn[MONGODB_DB]
 collection = mongodb[MONGODB_COLLECTION]
 collection_point = mongodb[MONGODB_POINT]
 collection_na = mongodb[MONGODB_NA]
-# conf = SparkConf().setMaster("local").set("spark.executor.memory", "512m").setAppName("SparkSQL")
-# sc = SparkContext(conf=conf)
-# sqlContext = HiveContext(sc)
+
 points =[i for i in range(1,POINTS+1)]
-global CKN,VOTE,InitT
+global CKN,VOTE
 CKN = random.randint(1,KN)
-VOTE = ''
-InitT = 0
+print("random KN:",CKN)
 def pre_data():
     #for relabel & voting 
     f = open('D:/github/sa/vote_super.json','w')
@@ -102,7 +95,7 @@ def pre_data():
     Cvote = collection.find({'KN':CKN})[0]
     for i in range(1,CLUSTERING+1):
         for p in Cvote[str(i)]:
-            result[p-1].update({'origin_vote':i})
+            result[p-1].update({'origin_vote':i,"random_label":random.randint(1,CLUSTERING)})
     # print(len(super_pointers))
     # collection_point.insert(result)
     for li_result in result:
@@ -110,6 +103,7 @@ def pre_data():
         f.write('\n')
     # print(s_id)
     f.close()
+    MainJson2Csv('vote_super')
     """insert super_points data table
     """
     return s_id
@@ -153,12 +147,12 @@ def initNa(CKN):
         f.write('\n')   
     f.close()
     MainJson2Csv('na')
-    return 0.1*tempR/KN
+    return 0.1*tempR/KN,ha
 
 def fit(SUPER):
-    # global VOTE
+    global VOTE
     # Set up  the initial params
-    T = InitT
+    T = 0.0995
     alpha = 0.9
     max_iter = 5
     cf = 0.8
@@ -166,10 +160,10 @@ def fit(SUPER):
     # Computes the acceptance probability as a function of T; maximization
     accept_prob = lambda old, new, T: np.exp((new-old)/T)
     total_iter = 0
-    print(T)
+    # print("test...................")
     '''引入投票结果
     '''
-    # VOTE = pd.read_csv("D:/github/sa/vote_super.csv")
+    VOTE = pd.read_csv("D:/github/sa/vote_super.csv")
     # VOTE = sqlContext.read.json("D:/github/sa/vote_super.json")
     # VOTE = VOTE.toPandas()
     '''引入NA
@@ -230,74 +224,16 @@ def fit(SUPER):
     # return VOTE['origin_vote'].values
     # print(VOTE['origin_vote'].values)  
 
-'''
-Scount = pre_data()  
-# Initialize Simulated Annealing 
-InitT = initNa(CKN) # 初始温度
-# print(InitT)
-# sa = SimulatedAnneal(T=InitT, max_iter=10, alpha=0.9,cf=0.8)
-SUPER = []
-for sid in range(1,Scount):
-    spointers = collection_point.find({'S_id':sid})
-    s_pointers = []
-    for li in spointers:
-        pointer = li['data_id']
-        s_pointers.append(pointer)
-    SUPER.append(s_pointers)
-VOTE = pd.read_csv("D:/github/sa/vote_super.csv")
-startTime = time.time()
-pool = Pool()
-pool.map(fit,SUPER)
-pool.close()
-pool.join()
-endTime = time.time()
-cal = endTime - startTime
-print("cal time is :",cal)
-label = []      # 真实标签
-f = open('D:/github/sa/letter.txt')
-for line in f:
-    line = line.strip()
-    label.append(int(line))
-label = np.array(label)
-predict_result = VOTE['origin_vote'].values 
-print(VOTE['origin_vote'].values)  
-# Print a report of precision, recall, f1_score
-print(classification_report(label, predict_result))
 
-'''     
+     
 if __name__=="__main__":
-    # global VOTE,InitT
     Scount = pre_data()  
+    print("all_count:",Scount)
+    # CKN = random.randint(1,KN)
     # Initialize Simulated Annealing 
-    InitT = initNa(CKN) # 初始温度
-    # print(InitT)
-    # sa = SimulatedAnneal(T=InitT, max_iter=10, alpha=0.9,cf=0.8)
+    InitT,ha = initNa(CKN) # 初始温度
+    print("InitT",InitT)
 
-    SUPER = []
-    for sid in range(1,Scount):
-        spointers = collection_point.find({'S_id':sid})
-        s_pointers = []
-        for li in spointers:
-            pointer = li['data_id']
-            s_pointers.append(pointer)
-        SUPER.append(s_pointers)
-    VOTE = pd.read_csv("D:/github/sa/vote_super.csv")
-    startTime = time.time()
-    pool = Pool()
-    pool.map(fit,SUPER)
-    pool.close()
-    pool.join()
-    endTime = time.time()
-    cal = endTime - startTime
-    print("cal time is :",cal)
-    label = []      # 真实标签
-    f = open('D:/github/sa/letter.txt')
-    for line in f:
-        line = line.strip()
-        label.append(int(line))
-    label = np.array(label)
-    predict_result = VOTE['origin_vote'].values 
-    print(VOTE['origin_vote'].values)  
-    # Print a report of precision, recall, f1_score
-    print(classification_report(label, predict_result))
- 
+    
+
+      

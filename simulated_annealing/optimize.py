@@ -17,7 +17,9 @@ from pyspark import SQLContext
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType
 from pyspark import *  
 import time
-
+from multiprocessing import Process
+import logging
+from multiprocessing import Pool
 
 from config import (MONGODB_HOST,
                     MONGODB_PORT,
@@ -34,10 +36,10 @@ mongodb = conn[MONGODB_DB]
 collection = mongodb[MONGODB_COLLECTION]
 collection_point = mongodb[MONGODB_POINT]
 collection_na = mongodb[MONGODB_NA]
-conf = SparkConf().setMaster("local").set("spark.executor.memory", "512m").setAppName("SparkSQL").set("spark.eventLog.enabled",False)
-sc = SparkContext(conf=conf)
-sqlContext = HiveContext(sc)
-na = sqlContext.read.json("D:/github/sa/na.json")
+# conf = SparkConf().setMaster("local").set("spark.executor.memory", "512m").setAppName("SparkSQL").set("spark.eventLog.enabled",False)
+# sc = SparkContext(conf=conf)
+# sqlContext = HiveContext(sc)
+# na = sqlContext.read.json("D:/github/sa/na.json")
 class SimulatedAnneal(object):
     def __init__(self, T=0.5, max_iter=10,T_min=0.0001, alpha=0.75,cf=0.8):
 
@@ -50,7 +52,7 @@ class SimulatedAnneal(object):
         self.__cf = cf
         self.__T_min = T_min
 
-    def fit(self,SUPER,ha):
+    def fit(self,SUPER):
         # Set up  the initial params
         T = self.__T
         alpha = self.__alpha
@@ -63,12 +65,14 @@ class SimulatedAnneal(object):
         print("test...................")
         '''引入投票结果
         '''
-        VOTE = sqlContext.read.json("D:/github/sa/vote_super.json")
-        VOTE = VOTE.toPandas()
+        VOTE = pd.read_csv("D:/github/sa/vote_super.csv")
+        # VOTE = sqlContext.read.json("D:/github/sa/vote_super.json")
+        # VOTE = VOTE.toPandas()
         '''引入NA
         '''
-        NADATA = sqlContext.read.json("D:/github/sa/na.json")
-        NADATA = NADATA.toPandas()
+        NADATA = pd.read_csv("D:/github/sa/na.csv")
+        # NADATA = sqlContext.read.json("D:/github/sa/na.json")
+        # NADATA = NADATA.toPandas()
         old_score = T*10
         ST = time.time()
         tempIter = False
@@ -83,6 +87,7 @@ class SimulatedAnneal(object):
                     '''计算 HB,r......
                     '''
                     for i in range(1,CLUSTERING+1):
+                        print(origin_vote,new_vote,i)
                         NADATA[str(new_vote)+str(i)] += 1
                         NADATA[str(origin_vote)+str(i)] -= 1
                     NADATA['na']=0
@@ -90,7 +95,7 @@ class SimulatedAnneal(object):
                         for j in range(1,CLUSTERING+1):
                             NADATA['na'] += NADATA[str(i)+str(j)]*(NADATA[str(i)+str(j)]-1)/2
                     
-                    NADATA['nb_new'] = ha - NADATA['na']
+                    NADATA['nb_new'] = NADATA['ha'] - NADATA['na']
                     NADATA['nc_new'] = NADATA['hb'] - NADATA['na']
                     NADATA['nd_new'] = POINTS* (POINTS-1)/2 - NADATA['na'] - NADATA['nb_new'] - NADATA['nc_new']
                     NADATA['r'] = 2*(NADATA['na']+NADATA['nd_new'])/(POINTS*(POINTS-1)/2)
@@ -116,8 +121,8 @@ class SimulatedAnneal(object):
             total_iter += 1
         ET = time.time()
         print("="*20,ET-ST)
-        return VOTE['origin_vote'].values
-        # print(VOTE['origin_vote'].values)
+        # return VOTE['origin_vote'].values
+        print(VOTE['origin_vote'].values)
         
 if __name__=="__main__":
     sa = SimulatedAnneal(T=0.0995, max_iter=10, alpha=0.9,cf=0.8)
