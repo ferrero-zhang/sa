@@ -25,6 +25,8 @@ from multiprocessing import Process
 import logging
 from multiprocessing import Pool
 from json2csv import MainJson2Csv
+import ConfigParser
+
 
 from config import (MONGODB_HOST,
                     MONGODB_PORT,
@@ -46,6 +48,9 @@ points =[i for i in range(1,POINTS+1)]
 global CKN,VOTE
 CKN = random.randint(1,KN)
 print("random KN:",CKN)
+config = ConfigParser.ConfigParser()
+config.read('D:/github/sa/params.config')
+
 def pre_data():
     #for relabel & voting 
     f = open('D:/github/sa/vote_super.json','w')
@@ -234,6 +239,9 @@ if __name__=="__main__":
     InitT,ha = initNa(CKN) # 初始温度
     print("InitT",InitT)
 
+    config.set('params','KN',CKN)
+    config.set('params','T',InitT)
+    config.write(open('D:/github/sa/params.config', 'w'))
     
 
       

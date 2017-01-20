@@ -26,6 +26,8 @@ import logging
 from multiprocessing import Pool
 from json2csv import MainJson2Csv
 import sys
+import ConfigParser
+
 from config import (MONGODB_HOST,
                     MONGODB_PORT,
                     MONGODB_DB,
@@ -47,44 +49,36 @@ collection_point = mongodb[MONGODB_POINT]
 collection_na = mongodb[MONGODB_NA]
 
 points =[i for i in range(1,POINTS+1)]
-global CKN,VOTE,T,alpha,max_iter,cf,T_min
-CKN = 32
-T = 0.0995428956948
+global CKN,VOTE,T,alpha,max_iter,cf,T_min,NADATA
+config = ConfigParser .ConfigParser()
+config.read('D:/github/sa/params.config')
+CKN = config.get('params','KN')
+T = float(config.get('params','T'))
+# CKN = 32
+# T = 0.0995428956948
 alpha = 0.9
 max_iter = 10
 cf = 0.8
 T_min = 0.000001
 VOTE = pd.read_csv("D:/github/sa/vote_super.csv")
-
+NADATA = pd.read_csv("D:/github/sa/na.csv")
 
 def Rfit(SUPER):
-    global CKN,VOTE,T,alpha,max_iter,cf,T_min
+    global CKN,VOTE,T,alpha,max_iter,cf,T_min,NADATA
     # Set up  the initial params
     # Computes the acceptance probability as a function of T; maximization
     accept_prob = lambda old, new, T: np.exp((new-old)/T)
     total_iter = 0
-    '''引入NA
-    '''
-    NADATA = pd.read_csv("D:/github/sa/na.csv")
-    # NADATA = sqlContext.read.json("D:/github/sa/na.json")
-    # NADATA = NADATA.toPandas()
     old_score = T*10
     ST = time.time()
     while T > T_min and total_iter < max_iter :
-        # print(SUPER)
-        if len(SUPER)==1:
-            voteNum = SUPER[0]
-        else:
-            voteNum = SUPER[random.randint(1,len(SUPER))-1]
-        # print(voteNum)
+        voteNum = SUPER[random.randint(1,len(SUPER))-1]
         origin_vote = VOTE.ix[[voteNum],['random_label']].values.tolist()[0][0]
         new_vote = VOTE.ix[[voteNum],['vote']].values.tolist()[0][0]
-        # print(origin_vote,new_vote)
         if new_vote != origin_vote:
             '''计算 HB,r......
             '''
             for i in range(1,CLUSTERING+1):
-                # print(origin_vote,new_vote,i)
                 NADATA[str(new_vote)+str(i)] += 1
                 NADATA[str(origin_vote)+str(i)] -= 1
             NADATA['na']=0
@@ -103,39 +97,28 @@ def Rfit(SUPER):
                 a = 1
             else:
                 a = accept_prob(old_score, new_score, T)
+            '''update data 
+            '''
             if a > cf:
                 old_score = new_score
-                '''update data 
-                '''
                 for point in SUPER:
+                    # print(VOTE.ix[[point-1],['random_label']])
                     VOTE.ix[[point-1],['random_label']] = new_vote
+                    # print(VOTE.ix[[point-1],['random_label']])
             else:
                 for point in SUPER:
                     VOTE.ix[[point-1],['random_label']] = origin_vote
-            # for point in li:
-                # VOTE.ix[[point-1],['origin_vote']] = new_vote
         T *= alpha
         total_iter += 1
     ET = time.time()
 
 
 def Cfit(SUPER):
-    global CKN,VOTE,T,alpha,max_iter,cf,T_min
+    global CKN,VOTE,T,alpha,max_iter,cf,T_min,NADATA
     # Set up  the initial params
     # Computes the acceptance probability as a function of T; maximization
     accept_prob = lambda old, new, T: np.exp((new-old)/T)
     total_iter = 0
-    # print("test...................")
-    '''引入投票结果
-    '''
-    # VOTE = pd.read_csv("D:/github/sa/vote_super.csv")
-    # VOTE = sqlContext.read.json("D:/github/sa/vote_super.json")
-    # VOTE = VOTE.toPandas()
-    '''引入NA
-    '''
-    NADATA = pd.read_csv("D:/github/sa/na.csv")
-    # NADATA = sqlContext.read.json("D:/github/sa/na.json")
-    # NADATA = NADATA.toPandas()
     old_score = T*10
     ST = time.time()
     while T > T_min and total_iter < max_iter :
@@ -144,7 +127,7 @@ def Cfit(SUPER):
             voteNum = SUPER[0]
         else:
             voteNum = SUPER[random.randint(1,len(SUPER))-1]
-        # print(voteNum)
+
         origin_vote = VOTE.ix[[voteNum],['origin_vote']].values.tolist()[0][0]
         new_vote = VOTE.ix[[voteNum],['vote']].values.tolist()[0][0]
         # print(origin_vote,new_vote)
@@ -192,12 +175,6 @@ def Cfit(SUPER):
 
      
 if __name__=="__main__":
-    # Scount = pre_data()  #2589
-    # CKN = random.randint(1,KN)
-    # Initialize Simulated Annealing 
-    # InitT,ha = initNa(CKN) # 初始温度
-    # print(InitT)
-    # sa = SimulatedAnneal(T=InitT, max_iter=10, alpha=0.9,cf=0.8)
     '''获取超点集合
     '''
     SUPER = []
