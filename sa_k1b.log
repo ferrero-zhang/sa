@@ -1,0 +1,392 @@
+Fri, 03 Feb 2017 21:19:16 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:19:16 data_sa.py[line:220] INFO KN:38	7.10099983215
+Fri, 03 Feb 2017 21:19:16 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9919    0.9919    0.9919       494
+          2     0.9987    0.5558    0.7142      1389
+          3     0.8704    1.0000    0.9307       141
+          4     0.6727    0.9737    0.7957       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3680    0.9225    0.5261       142
+
+avg / total     0.9098    0.7030    0.7601      2340
+
+Fri, 03 Feb 2017 21:19:24 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:19:24 data_sa.py[line:220] INFO KN:21	2.38599991798
+Fri, 03 Feb 2017 21:19:24 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9919    0.9919    0.9919       494
+          2     1.0000    0.4586    0.6288      1389
+          3     0.4982    0.9929    0.6635       141
+          4     0.7432    0.9649    0.8397       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3547    0.8944    0.5080       142
+
+avg / total     0.8907    0.6427    0.6944      2340
+
+Fri, 03 Feb 2017 21:19:34 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:19:34 data_sa.py[line:220] INFO KN:9	3.68400001526
+Fri, 03 Feb 2017 21:19:34 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9478    0.9919    0.9693       494
+          2     1.0000    0.4327    0.6040      1389
+          3     0.4605    0.9929    0.6292       141
+          4     0.7534    0.9649    0.8462       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3538    0.8944    0.5070       142
+
+avg / total     0.8796    0.6274    0.6731      2340
+
+Fri, 03 Feb 2017 21:19:44 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:19:44 data_sa.py[line:220] INFO KN:33	3.95399999619
+Fri, 03 Feb 2017 21:19:44 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9478    0.9919    0.9693       494
+          2     1.0000    0.4298    0.6012      1389
+          3     0.4560    0.9929    0.6250       141
+          4     0.7483    0.9649    0.8429       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3481    0.8873    0.5000       142
+
+avg / total     0.8787    0.6252    0.6706      2340
+
+Fri, 03 Feb 2017 21:19:56 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:19:56 data_sa.py[line:220] INFO KN:8	5.75900006294
+Fri, 03 Feb 2017 21:19:56 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9939    0.9919    0.9929       494
+          2     1.0000    0.5572    0.7157      1389
+          3     0.9338    1.0000    0.9658       141
+          4     0.7534    0.9649    0.8462       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3634    0.9085    0.5191       142
+
+avg / total     0.9184    0.7026    0.7653      2340
+
+Fri, 03 Feb 2017 21:20:10 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:20:10 data_sa.py[line:220] INFO KN:32	8.90100002289
+Fri, 03 Feb 2017 21:20:10 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9939    0.9919    0.9929       494
+          2     1.0000    0.5680    0.7245      1389
+          3     0.9338    1.0000    0.9658       141
+          4     0.7333    0.9649    0.8333       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3489    0.8944    0.5020       142
+
+avg / total     0.9166    0.7081    0.7689      2340
+
+Fri, 03 Feb 2017 21:20:20 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:20:20 data_sa.py[line:220] INFO KN:4	3.79299998283
+Fri, 03 Feb 2017 21:20:20 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9939    0.9899    0.9919       494
+          2     1.0000    0.4708    0.6402      1389
+          3     0.5534    0.9929    0.7107       141
+          4     0.6548    0.9649    0.7801       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3618    0.8944    0.5152       142
+
+avg / total     0.8906    0.6496    0.7015      2340
+
+Fri, 03 Feb 2017 21:20:31 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:20:31 data_sa.py[line:220] INFO KN:8	5.60199999809
+Fri, 03 Feb 2017 21:20:31 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9939    0.9919    0.9929       494
+          2     1.0000    0.5572    0.7157      1389
+          3     0.9338    1.0000    0.9658       141
+          4     0.7534    0.9649    0.8462       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3634    0.9085    0.5191       142
+
+avg / total     0.9184    0.7026    0.7653      2340
+
+Fri, 03 Feb 2017 21:20:43 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:20:43 data_sa.py[line:220] INFO KN:38	6.39599990845
+Fri, 03 Feb 2017 21:20:43 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9919    0.9919    0.9919       494
+          2     0.9987    0.5558    0.7142      1389
+          3     0.8704    1.0000    0.9307       141
+          4     0.6727    0.9737    0.7957       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3680    0.9225    0.5261       142
+
+avg / total     0.9098    0.7030    0.7601      2340
+
+Fri, 03 Feb 2017 21:20:55 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:20:55 data_sa.py[line:220] INFO KN:38	6.37999987602
+Fri, 03 Feb 2017 21:20:55 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9919    0.9919    0.9919       494
+          2     0.9987    0.5558    0.7142      1389
+          3     0.8704    1.0000    0.9307       141
+          4     0.6727    0.9737    0.7957       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3680    0.9225    0.5261       142
+
+avg / total     0.9098    0.7030    0.7601      2340
+
+Fri, 03 Feb 2017 21:21:04 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:21:04 data_sa.py[line:220] INFO KN:13	2.05900001526
+Fri, 03 Feb 2017 21:21:04 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9939    0.9919    0.9929       494
+          2     1.0000    0.4572    0.6275      1389
+          3     0.5147    0.9929    0.6780       141
+          4     0.7333    0.9649    0.8333       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3523    0.8732    0.5020       142
+
+avg / total     0.8915    0.6406    0.6940      2340
+
+Fri, 03 Feb 2017 21:21:13 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:21:13 data_sa.py[line:220] INFO KN:35	3.73000001907
+Fri, 03 Feb 2017 21:21:13 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9478    0.9919    0.9693       494
+          2     1.0000    0.4356    0.6068      1389
+          3     0.4620    0.9929    0.6306       141
+          4     0.7534    0.9649    0.8462       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3618    0.8944    0.5152       142
+
+avg / total     0.8802    0.6291    0.6753      2340
+
+Fri, 03 Feb 2017 21:21:27 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:21:27 data_sa.py[line:220] INFO KN:15	8.47899985313
+Fri, 03 Feb 2017 21:21:27 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9879    0.9919    0.9899       494
+          2     1.0000    0.6465    0.7853      1389
+          3     0.8650    1.0000    0.9276       141
+          4     0.6364    0.9825    0.7724       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3472    0.8803    0.4980       142
+
+avg / total     0.9063    0.7547    0.7989      2340
+
+Fri, 03 Feb 2017 21:21:39 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:21:39 data_sa.py[line:220] INFO KN:7	6.58899998665
+Fri, 03 Feb 2017 21:21:39 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9919    0.9919    0.9919       494
+          2     0.9989    0.6357    0.7769      1389
+          3     0.8140    0.9929    0.8946       141
+          4     0.7161    0.9737    0.8253       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3623    0.8803    0.5133       142
+
+avg / total     0.9082    0.7474    0.7959      2340
+
+Fri, 03 Feb 2017 21:21:54 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:21:54 data_sa.py[line:220] INFO KN:32	9.18099999428
+Fri, 03 Feb 2017 21:21:54 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9939    0.9919    0.9929       494
+          2     1.0000    0.5680    0.7245      1389
+          3     0.9338    1.0000    0.9658       141
+          4     0.7333    0.9649    0.8333       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3489    0.8944    0.5020       142
+
+avg / total     0.9166    0.7081    0.7689      2340
+
+Fri, 03 Feb 2017 21:22:04 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:22:04 data_sa.py[line:220] INFO KN:12	3.98000001907
+Fri, 03 Feb 2017 21:22:04 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9478    0.9919    0.9693       494
+          2     1.0000    0.5428    0.7037      1389
+          3     0.9400    1.0000    0.9691       141
+          4     0.7586    0.9649    0.8494       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3681    0.8944    0.5216       142
+
+avg / total     0.9096    0.6932    0.7538      2340
+
+Fri, 03 Feb 2017 21:22:14 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:22:14 data_sa.py[line:220] INFO KN:35	3.68799996376
+Fri, 03 Feb 2017 21:22:14 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9478    0.9919    0.9693       494
+          2     1.0000    0.4356    0.6068      1389
+          3     0.4620    0.9929    0.6306       141
+          4     0.7534    0.9649    0.8462       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3618    0.8944    0.5152       142
+
+avg / total     0.8802    0.6291    0.6753      2340
+
+Fri, 03 Feb 2017 21:22:21 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:22:21 data_sa.py[line:220] INFO KN:13	2.0680000782
+Fri, 03 Feb 2017 21:22:21 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9939    0.9919    0.9929       494
+          2     1.0000    0.4572    0.6275      1389
+          3     0.5147    0.9929    0.6780       141
+          4     0.7333    0.9649    0.8333       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3523    0.8732    0.5020       142
+
+avg / total     0.8915    0.6406    0.6940      2340
+
+Fri, 03 Feb 2017 21:22:42 data_sa.py[line:219] INFO for the strategy:C
+Fri, 03 Feb 2017 21:22:42 data_sa.py[line:220] INFO KN:19	6.53299999237
+Fri, 03 Feb 2017 21:22:42 data_sa.py[line:221] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9919    0.9919    0.9919       494
+          2     0.9983    0.4334    0.6044      1389
+          3     0.8758    1.0000    0.9338       141
+          4     0.7655    0.9737    0.8571       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3634    0.9085    0.5191       142
+
+avg / total     0.9141    0.6295    0.6977      2340
+
+Mon, 06 Feb 2017 09:43:20 data_sa.py[line:274] INFO for the strategy:R
+Mon, 06 Feb 2017 09:43:20 data_sa.py[line:275] INFO KN:3	2.26799988747
+Mon, 06 Feb 2017 09:46:34 data_sa.py[line:278] INFO for the strategy:R
+Mon, 06 Feb 2017 09:46:34 data_sa.py[line:279] INFO KN:3	1.96700000763
+Mon, 06 Feb 2017 09:47:48 data_sa.py[line:280] INFO for the strategy:R
+Mon, 06 Feb 2017 09:47:48 data_sa.py[line:281] INFO KN:3	2.28199982643
+Mon, 06 Feb 2017 09:49:31 data_sa.py[line:280] INFO for the strategy:R
+Mon, 06 Feb 2017 09:49:31 data_sa.py[line:281] INFO KN:3	5.98000001907
+Mon, 06 Feb 2017 10:01:38 data_sa.py[line:280] INFO for the strategy:R
+Mon, 06 Feb 2017 10:01:38 data_sa.py[line:281] INFO KN:3	523.924000025
+Mon, 06 Feb 2017 10:10:55 data_sa.py[line:280] INFO for the strategy:R
+Mon, 06 Feb 2017 10:10:55 data_sa.py[line:281] INFO KN:3	502.789000034
+Mon, 06 Feb 2017 10:20:34 data_sa.py[line:280] INFO for the strategy:R
+Mon, 06 Feb 2017 10:20:34 data_sa.py[line:281] INFO KN:3	500.192000151
+Mon, 06 Feb 2017 10:30:28 data_sa.py[line:279] INFO for the strategy:R
+Mon, 06 Feb 2017 10:30:28 data_sa.py[line:280] INFO KN:3	496.082000017
+Mon, 06 Feb 2017 10:30:28 data_sa.py[line:284] INFO 
+             precision    recall  f1-score   support
+
+          1     0.6717    0.9899    0.8003       494
+          2     0.7593    0.4838    0.5910      1389
+          3     0.2549    0.3688    0.3014       141
+          4     0.6149    0.9386    0.7431       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.0035    0.0070    0.0047       142
+
+avg / total     0.6381    0.5645    0.5744      2340
+
+Mon, 06 Feb 2017 10:42:30 data_sa.py[line:279] INFO for the strategy:R
+Mon, 06 Feb 2017 10:42:30 data_sa.py[line:280] INFO KN:4	506.46600008
+Mon, 06 Feb 2017 10:42:30 data_sa.py[line:284] INFO 
+             precision    recall  f1-score   support
+
+          1     0.4762    0.9919    0.6435       494
+          2     0.8060    0.4276    0.5588      1389
+          3     0.2909    0.4539    0.3546       141
+          4     0.0435    0.0088    0.0146       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.0191    0.0352    0.0248       142
+
+avg / total     0.5998    0.4932    0.4911      2340
+
+Mon, 06 Feb 2017 10:43:30 data_sa.py[line:279] INFO for the strategy:R
+Mon, 06 Feb 2017 10:43:30 data_sa.py[line:280] INFO KN:44	53.3429999352
+Mon, 06 Feb 2017 10:43:30 data_sa.py[line:284] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9899    0.9939    0.9919       494
+          2     1.0000    0.3384    0.5056      1389
+          3     0.4107    0.8156    0.5463       141
+          4     0.2992    0.9737    0.4577       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3234    0.9155    0.4779       142
+
+avg / total     0.8615    0.5628    0.5938      2340
+
+Mon, 06 Feb 2017 10:52:05 data_sa.py[line:279] INFO for the strategy:R
+Mon, 06 Feb 2017 10:52:05 data_sa.py[line:280] INFO KN:4	508.378000021
+Mon, 06 Feb 2017 10:52:05 data_sa.py[line:284] INFO 
+             precision    recall  f1-score   support
+
+          1     0.7317    0.9939    0.8429       494
+          2     0.9588    0.4190    0.5832      1389
+          3     0.2618    0.3546    0.3012       141
+          4     0.0417    0.0088    0.0145       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.2175    0.8944    0.3499       142
+
+avg / total     0.7546    0.5346    0.5642      2340
+
+Mon, 06 Feb 2017 11:00:41 data_sa.py[line:279] INFO for the strategy:R
+Mon, 06 Feb 2017 11:00:41 data_sa.py[line:280] INFO KN:48	510.440999985
+Mon, 06 Feb 2017 11:00:41 data_sa.py[line:284] INFO 
+             precision    recall  f1-score   support
+
+          1     0.7055    0.9939    0.8252       494
+          2     0.7562    0.4845    0.5906      1389
+          3     0.0388    0.0709    0.0501       141
+          4     0.2725    0.9298    0.4215       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.0545    0.0211    0.0305       142
+
+avg / total     0.6167    0.5483    0.5502      2340
+
+Mon, 06 Feb 2017 11:02:46 data_sa.py[line:279] INFO for the strategy:R
+Mon, 06 Feb 2017 11:02:46 data_sa.py[line:280] INFO KN:26	118.768000126
+Mon, 06 Feb 2017 11:02:46 data_sa.py[line:284] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9919    0.9939    0.9929       494
+          2     0.7500    0.4039    0.5250      1389
+          3     0.4077    0.8298    0.5467       141
+          4     0.3033    0.9737    0.4625       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.0588    0.0493    0.0536       142
+
+avg / total     0.6975    0.5500    0.5800      2340
+
+Mon, 06 Feb 2017 11:35:02 data_sa.py[line:280] INFO for the strategy:R
+Mon, 06 Feb 2017 11:35:02 data_sa.py[line:281] INFO KN:26	1728.51200008
+Mon, 06 Feb 2017 11:35:02 data_sa.py[line:285] INFO 
+             precision    recall  f1-score   support
+
+          1     0.9919    0.9939    0.9929       494
+          2     0.8038    0.3362    0.4741      1389
+          3     0.4483    0.8298    0.5821       141
+          4     0.0187    0.0439    0.0262       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.3195    0.9225    0.4746       142
+
+avg / total     0.7338    0.5175    0.5562      2340
+
+Mon, 13 Feb 2017 09:53:16 data_sa.py[line:287] INFO for the strategy:R
+Mon, 13 Feb 2017 09:53:16 data_sa.py[line:288] INFO KN:26	10.6779999733
+Mon, 13 Feb 2017 09:53:16 data_sa.py[line:292] INFO 
+             precision    recall  f1-score   support
+
+          1     0.0000    0.0000    0.0000       494
+          2     0.5936    1.0000    0.7450      1389
+          3     0.0000    0.0000    0.0000       141
+          4     0.0000    0.0000    0.0000       114
+          5     0.0000    0.0000    0.0000        60
+          6     0.0000    0.0000    0.0000       142
+
+avg / total     0.3523    0.5936    0.4422      2340
+

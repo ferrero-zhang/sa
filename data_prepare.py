@@ -102,9 +102,10 @@ def pre_data():
         for p in Cvote[str(i)]:
             result[p-1].update({'origin_vote':i,"random_label":random.randint(1,CLUSTERING)})
     # print(len(super_pointers))
-    # collection_point.insert(result)
+    #collection_point.insert(result)
     for li_result in result:
         f.write(json.dumps(li_result))
+        # collection_point.insert(li_result)
         f.write('\n')
     # print(s_id)
     f.close()
@@ -112,14 +113,7 @@ def pre_data():
     """insert super_points data table
     """
     return s_id
-def cal_kmenas4HA():
-    for i in range(1,KN+1):
-        li = collection.find({'KN':i})[0]
-        HA = 0
-        for cl in range(1,CLUSTERING+1):
-            HA += float(len(li[str(cl)])*(len(li[str(cl)])-1))/2.0
-        li.update({'ha':HA})
-        collection.update({'KN':i},li)
+
 
 def initNa(CKN):
     f = open('D:/github/sa/na.json','w')
@@ -154,82 +148,6 @@ def initNa(CKN):
     MainJson2Csv('na')
     return 0.1*tempR/KN,ha
 
-def fit(SUPER):
-    global VOTE
-    # Set up  the initial params
-    T = 0.0995
-    alpha = 0.9
-    max_iter = 5
-    cf = 0.8
-    T_min = 0.000001
-    # Computes the acceptance probability as a function of T; maximization
-    accept_prob = lambda old, new, T: np.exp((new-old)/T)
-    total_iter = 0
-    # print("test...................")
-    '''引入投票结果
-    '''
-    VOTE = pd.read_csv("D:/github/sa/vote_super.csv")
-    # VOTE = sqlContext.read.json("D:/github/sa/vote_super.json")
-    # VOTE = VOTE.toPandas()
-    '''引入NA
-    '''
-    NADATA = pd.read_csv("D:/github/sa/na.csv")
-    # NADATA = sqlContext.read.json("D:/github/sa/na.json")
-    # NADATA = NADATA.toPandas()
-    old_score = T*10
-    ST = time.time()
-    while T > T_min and total_iter < max_iter :
-        # print(SUPER)
-        if len(SUPER)==1:
-            voteNum = SUPER[0]
-        else:
-            voteNum = SUPER[random.randint(1,len(SUPER))-1]
-        # print(voteNum)
-        origin_vote = VOTE.ix[[voteNum],['origin_vote']].values.tolist()[0][0]
-        new_vote = VOTE.ix[[voteNum],['vote']].values.tolist()[0][0]
-        # print(origin_vote,new_vote)
-        if new_vote != origin_vote:
-            '''计算 HB,r......
-            '''
-            for i in range(1,CLUSTERING+1):
-                # print(origin_vote,new_vote,i)
-                NADATA[str(new_vote)+str(i)] += 1
-                NADATA[str(origin_vote)+str(i)] -= 1
-            NADATA['na']=0
-            for i in range(1,CLUSTERING+1):
-                for j in range(1,CLUSTERING+1):
-                    NADATA['na'] += NADATA[str(i)+str(j)]*(NADATA[str(i)+str(j)]-1)/2
-                    
-            NADATA['nb_new'] = NADATA['ha'] - NADATA['na']
-            NADATA['nc_new'] = NADATA['hb'] - NADATA['na']
-            NADATA['nd_new'] = POINTS* (POINTS-1)/2 - NADATA['na'] - NADATA['nb_new'] - NADATA['nc_new']
-            NADATA['r'] = 2*(NADATA['na']+NADATA['nd_new'])/(POINTS*(POINTS-1)/2)
-            new_score = NADATA['r'].sum()/KN  
-            old_score = old_score
-                
-            if new_score - old_score >0:
-                a = 1
-            else:
-                a = accept_prob(old_score, new_score, T)
-            if a > cf:
-                old_score = new_score
-                '''update data 
-                '''
-                for point in SUPER:
-                    VOTE.ix[[point-1],['origin_vote']] = new_vote
-            else:
-                for point in SUPER:
-                    VOTE.ix[[point-1],['origin_vote']] = origin_vote
-            # for point in li:
-                # VOTE.ix[[point-1],['origin_vote']] = new_vote
-        T *= alpha
-        total_iter += 1
-    ET = time.time()
-    # print("="*20,ET-ST)
-    # return VOTE['origin_vote'].values
-    # print(VOTE['origin_vote'].values)  
-
-
      
 if __name__=="__main__":
     Scount = pre_data()  
@@ -240,6 +158,7 @@ if __name__=="__main__":
     print("InitT",InitT)
 
     config.set('params','KN',CKN)
+    config.set('params','all_count',Scount)
     config.set('params','T',InitT)
     config.write(open('D:/github/sa/params.config', 'w'))
     

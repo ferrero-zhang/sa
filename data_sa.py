@@ -10,6 +10,10 @@ from pymongo import MongoClient
 # 3rd party
 import numpy as np
 from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import recall_score
+from sklearn.metrics.cluster import normalized_mutual_info_score
 # local
 import metrics, utils
 from relable import voting,relabel_cluster
@@ -21,7 +25,8 @@ import random
 from collections import Counter
 import json
 import time
-from multiprocessing import Process
+from multiprocessing import Process,Lock
+from multiprocessing import Process, Value, Array
 import logging
 from multiprocessing import Pool
 from json2csv import MainJson2Csv
@@ -36,11 +41,13 @@ from config import (MONGODB_HOST,
                     CLUSTERING,
                     MONGODB_POINT,
                     MONGODB_NA,
+                    CLUSTERING_NAME,
+                    # RLABLE,
                     POINTS)
 logging.basicConfig(level=logging.DEBUG,
                 format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
                 datefmt='%a, %d %b %Y %H:%M:%S',
-                filename='D:/github/sa/sa_letter.log',
+                filename='D:/github/sa/sa_'+CLUSTERING_NAME+'.log',
                 filemode='a')
 conn = MongoClient(host=MONGODB_HOST, port=MONGODB_PORT)
 mongodb = conn[MONGODB_DB]
@@ -54,6 +61,7 @@ config = ConfigParser .ConfigParser()
 config.read('D:/github/sa/params.config')
 CKN = config.get('params','KN')
 T = float(config.get('params','T'))
+all_count = int(config.get('params','all_count'))
 # CKN = 32
 # T = 0.0995428956948
 alpha = 0.9
@@ -62,8 +70,8 @@ cf = 0.8
 T_min = 0.000001
 VOTE = pd.read_csv("D:/github/sa/vote_super.csv")
 NADATA = pd.read_csv("D:/github/sa/na.csv")
-
-def Rfit(SUPER):
+RLABLE = [0 for i in range(POINTS)]
+def Rfit(SUPER,RLABLE):
     global CKN,VOTE,T,alpha,max_iter,cf,T_min,NADATA
     # Set up  the initial params
     # Computes the acceptance probability as a function of T; maximization
@@ -71,8 +79,15 @@ def Rfit(SUPER):
     total_iter = 0
     old_score = T*10
     ST = time.time()
+    # print(VOTE)
     while T > T_min and total_iter < max_iter :
-        voteNum = SUPER[random.randint(1,len(SUPER))-1]
+
+        if len(SUPER)==1:
+            voteNum = SUPER[0]
+        else:
+            voteNum = SUPER[random.randint(1,len(SUPER))-1]
+        if isinstance(voteNum,list):
+            voteNum = voteNum[0]
         origin_vote = VOTE.ix[[voteNum],['random_label']].values.tolist()[0][0]
         new_vote = VOTE.ix[[voteNum],['vote']].values.tolist()[0][0]
         if new_vote != origin_vote:
@@ -97,20 +112,33 @@ def Rfit(SUPER):
                 a = 1
             else:
                 a = accept_prob(old_score, new_score, T)
-            '''update data 
-            '''
+        
             if a > cf:
                 old_score = new_score
+                '''update data 
+                '''
                 for point in SUPER:
-                    # print(VOTE.ix[[point-1],['random_label']])
-                    VOTE.ix[[point-1],['random_label']] = new_vote
-                    # print(VOTE.ix[[point-1],['random_label']])
+                    '''VOTE.ix[[point-1],['random_label']] = new_vote
+                    '''
+                    if isinstance(point,list):
+                        for p in point:
+                            RLABLE[p-1] = int(new_vote)
+                    else:
+                        RLABLE[point-1] = int(new_vote)
+                # print(new_vote)
             else:
                 for point in SUPER:
-                    VOTE.ix[[point-1],['random_label']] = origin_vote
+                    '''VOTE.ix[[point-1],['random_label']] = origin_vote
+                    '''
+                    if isinstance(point,list):
+                        for p in point:
+                            RLABLE[p-1] = int(new_vote)
+                    else:
+                        RLABLE[point-1] = int(origin_vote)
+                    # print(origin_vote)
         T *= alpha
         total_iter += 1
-    ET = time.time()
+
 
 
 def Cfit(SUPER):
@@ -118,7 +146,7 @@ def Cfit(SUPER):
     # Set up  the initial params
     # Computes the acceptance probability as a function of T; maximization
     accept_prob = lambda old, new, T: np.exp((new-old)/T)
-    total_iter = 0
+    total_iter = 10
     old_score = T*10
     ST = time.time()
     while T > T_min and total_iter < max_iter :
@@ -178,20 +206,21 @@ if __name__=="__main__":
     '''获取超点集合
     '''
     SUPER = []
-    for sid in range(1,2589):
+    for sid in range(1,all_count):
         spointers = collection_point.find({'S_id':sid})
         s_pointers = []
         for li in spointers:
             pointer = li['data_id']
             s_pointers.append(pointer)
-        SUPER.append(s_pointers)
+        if len(s_pointers)!=0:
+            SUPER.append(s_pointers)
     label = []      # 真实标签
-    f = open('D:/github/sa/letter.txt')
+    f = open('D:\\github\\'+CLUSTERING_NAME+'.txt')
     for line in f:
         line = line.strip()
         label.append(int(line))
-    label = np.array(label)
-    
+    # label = np.array(label)
+    # print(VOTE)
     startTime = time.time()
     pool = Pool()
     if sys.argv[1]=="C":
@@ -201,21 +230,69 @@ if __name__=="__main__":
         endTime = time.time()
         cal = endTime - startTime
         print("cal time is :",cal)
-        predict_result = VOTE['origin_vote'].values 
+        predict_result = VOTE['origin_vote'].values.tolist() 
+        
     else:
-        pool.map(Rfit,SUPER)
-        pool.close()
-        pool.join()
+        # num = Value('d', 0.0)
+        lock = Lock()
+        tarr = [0 for i in range(POINTS-1)]
+        num = Value('d', 0.0)
+        arr = Array('i', [1]*POINTS)
+        ps = []
+        for sup in SUPER:
+            ps.append(Process(target=Rfit, args=(lock,sup, arr)))
+            # Process(target=Rfit, args=(lock,sup, arr)).start()
+        for p in ps:
+            p.start()
+        for p in ps:
+            p.join()
+        # p.start()
+        # p.join()
+        # pool.map(p)
+        # pool.close()
+        # pool.join()
+        # Rfit(SUPER)
         endTime = time.time()
         cal = endTime - startTime
         print("cal time is :",cal)
-        predict_result = VOTE['random_label'].values 
+        # predict_result = VOTE['random_label'].values 
+        predict_result = arr[:]
+        # predict_result = []
+        # f = open('result.txt','w')
+        # for i in arr[:]:
+            # f.write(str(i)+'\n')
+        # f.close()
+        # f = open('result.txt')
+        # for line in f:
+            # line = int(line.strip())
+            # predict_result.append(line)
+        # print(predict_result)
+        # print(VOTE)
+        # clusters = []
+        # clusters.append(label)
+        # clusters.append(predict_result)
+        # relabeled_clusters = relabel_cluster(clusters)
+        # logging.info("for the strategy:"+sys.argv[1]) 
+        # logging.info("KN:"+str(CKN)+'\t'+str(cal)) 
+        # logging.info('\n f1_score:'+f1_score(relabeled_clusters[0], relabeled_clusters[1],average='macro')) 
+        # logging.info('\n accuracy_score:'+accuracy_score(relabeled_clusters[0], relabeled_clusters[1])) 
+        # logging.info('\n recall_score'+recall_score(relabeled_clusters[0], relabeled_clusters[1],average='macro')) 
+        # Print a report of precision, recall, f1_score
+        # print(classification_report(np.array(relabeled_clusters[0]), np.array(relabeled_clusters[1])))
+    clusters = []
+    clusters.append(label)
+    clusters.append(predict_result)
+    
+    relabeled_clusters = relabel_cluster(clusters)
     logging.info("for the strategy:"+sys.argv[1]) 
     logging.info("KN:"+str(CKN)+'\t'+str(cal)) 
-    logging.info('\n'+classification_report(label, predict_result)) 
+    # print(label)
+    # print(predict_result)
+    # logging.info('\n accuracy_score:'+accuracy_score(relabeled_clusters[0], relabeled_clusters[1])) 
+    logging.info('\n'+classification_report(np.array(relabeled_clusters[0]), np.array(relabeled_clusters[1]))) 
+    # logging.info('\n'+normalized_mutual_info_score(np.array(relabeled_clusters[0]), np.array(relabeled_clusters[1]))) 
     # Print a report of precision, recall, f1_score
-    print(classification_report(label, predict_result))
-
+    print(classification_report(np.array(relabeled_clusters[0]), np.array(relabeled_clusters[1])))
     
 
       
